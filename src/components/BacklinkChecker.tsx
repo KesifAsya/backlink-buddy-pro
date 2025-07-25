@@ -4,8 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Search, ExternalLink, CheckCircle, XCircle, Clock, AlertCircle } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Search, ExternalLink, CheckCircle, XCircle, Clock, AlertCircle, Globe } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface BacklinkResult {
   url: string;
@@ -22,7 +25,9 @@ interface BacklinkCheckerProps {
 }
 
 export const BacklinkChecker = ({ userPlan, remainingChecks, onCheckComplete }: BacklinkCheckerProps) => {
-  const [urls, setUrls] = useState("");
+  const { t } = useTranslation();
+  const [yourWebsite, setYourWebsite] = useState("");
+  const [backlinkSources, setBacklinkSources] = useState("");
   const [isChecking, setIsChecking] = useState(false);
   const [results, setResults] = useState<BacklinkResult[]>([]);
   const [progress, setProgress] = useState(0);
@@ -45,14 +50,19 @@ export const BacklinkChecker = ({ userPlan, remainingChecks, onCheckComplete }: 
 
   const handleCheck = async () => {
     if (remainingChecks <= 0) {
-      toast.error("Kontrol hakkınız kalmadı. Premium plana geçin!");
+      toast.error(t("no_checks_remaining"));
       return;
     }
 
-    const urlList = urls.split('\n').filter(url => url.trim()).slice(0, userPlan === 'free' ? 5 : 50);
+    if (!yourWebsite.trim()) {
+      toast.error("Please enter your website URL");
+      return;
+    }
+
+    const sourceList = backlinkSources.split('\n').filter(url => url.trim()).slice(0, userPlan === 'free' ? 5 : 50);
     
-    if (urlList.length === 0) {
-      toast.error("Lütfen kontrol edilecek URL'leri girin");
+    if (sourceList.length === 0) {
+      toast.error(t("enter_urls"));
       return;
     }
 
@@ -62,27 +72,28 @@ export const BacklinkChecker = ({ userPlan, remainingChecks, onCheckComplete }: 
 
     const newResults: BacklinkResult[] = [];
     
-    for (let i = 0; i < urlList.length; i++) {
-      const url = urlList[i].trim();
+    for (let i = 0; i < sourceList.length; i++) {
+      const url = sourceList[i].trim();
       try {
+        // Mock checking if yourWebsite appears in the source URL
         const result = await mockCheck(url);
         newResults.push(result);
         setResults([...newResults]);
-        setProgress(((i + 1) / urlList.length) * 100);
+        setProgress(((i + 1) / sourceList.length) * 100);
       } catch (error) {
         newResults.push({
           url,
           status: 'broken',
           responseTime: 0,
           statusCode: 500,
-          lastChecked: new Date().toLocaleString('tr-TR')
+          lastChecked: new Date().toLocaleString()
         });
       }
     }
 
     setIsChecking(false);
     onCheckComplete();
-    toast.success(`${urlList.length} backlink kontrolü tamamlandı!`);
+    toast.success(t("backlinks_checked", { count: sourceList.length }));
   };
 
   const getStatusIcon = (status: BacklinkResult['status']) => {
@@ -101,13 +112,13 @@ export const BacklinkChecker = ({ userPlan, remainingChecks, onCheckComplete }: 
   const getStatusBadge = (status: BacklinkResult['status']) => {
     switch (status) {
       case 'active':
-        return <Badge variant="default" className="bg-success text-success-foreground">Aktif</Badge>;
+        return <Badge variant="default" className="bg-success text-success-foreground">{t("active")}</Badge>;
       case 'broken':
-        return <Badge variant="destructive">Kırık</Badge>;
+        return <Badge variant="destructive">{t("broken")}</Badge>;
       case 'redirect':
-        return <Badge variant="default" className="bg-warning text-warning-foreground">Yönlendirme</Badge>;
+        return <Badge variant="default" className="bg-warning text-warning-foreground">{t("redirect")}</Badge>;
       case 'pending':
-        return <Badge variant="outline">Kontrol Ediliyor...</Badge>;
+        return <Badge variant="outline">{t("checking_status")}</Badge>;
     }
   };
 
@@ -117,23 +128,37 @@ export const BacklinkChecker = ({ userPlan, remainingChecks, onCheckComplete }: 
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Search className="h-5 w-5" />
-            Backlink Kontrolü
+            {t("backlink_control")}
           </CardTitle>
           <CardDescription>
             {userPlan === 'free' 
-              ? "Ücretsiz planda aynı anda en fazla 5 URL kontrol edebilirsiniz."
-              : "Premium planda aynı anda en fazla 50 URL kontrol edebilirsiniz."
+              ? t("free_plan_limit")
+              : t("premium_plan_limit")
             }
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">URL'leri girin (her satıra bir URL)</label>
-            <textarea
-              className="w-full min-h-[120px] px-3 py-2 text-sm border rounded-md bg-background resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+            <Label className="flex items-center gap-2">
+              <Globe className="h-4 w-4" />
+              {t("your_website")}
+            </Label>
+            <Input
+              placeholder={t("enter_your_website")}
+              value={yourWebsite}
+              onChange={(e) => setYourWebsite(e.target.value)}
+              disabled={isChecking}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">{t("backlink_sources")}</Label>
+            <p className="text-xs text-muted-foreground">{t("enter_sources_desc")}</p>
+            <Textarea
+              className="min-h-[120px] resize-none"
               placeholder={`https://example.com/page1\nhttps://example.com/page2\nhttps://example.com/page3${userPlan === 'premium' ? '\n...' : ''}`}
-              value={urls}
-              onChange={(e) => setUrls(e.target.value)}
+              value={backlinkSources}
+              onChange={(e) => setBacklinkSources(e.target.value)}
               disabled={isChecking}
             />
           </div>
@@ -141,7 +166,7 @@ export const BacklinkChecker = ({ userPlan, remainingChecks, onCheckComplete }: 
           {isChecking && (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span>Kontrol ediliyor...</span>
+                <span>{t("checking")}</span>
                 <span>{Math.round(progress)}%</span>
               </div>
               <Progress value={progress} className="w-full" />
@@ -157,12 +182,12 @@ export const BacklinkChecker = ({ userPlan, remainingChecks, onCheckComplete }: 
             {isChecking ? (
               <>
                 <Clock className="h-4 w-4 animate-spin" />
-                Kontrol Ediliyor...
+                {t("checking")}
               </>
             ) : (
               <>
                 <Search className="h-4 w-4" />
-                Kontrol Et ({remainingChecks} hak kaldı)
+                {t("check_backlinks")} ({remainingChecks} {t("remaining_checks")})
               </>
             )}
           </Button>
@@ -172,9 +197,9 @@ export const BacklinkChecker = ({ userPlan, remainingChecks, onCheckComplete }: 
       {results.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Kontrol Sonuçları</CardTitle>
+            <CardTitle>{t("check_results")}</CardTitle>
             <CardDescription>
-              Toplam {results.length} URL kontrol edildi
+              {t("total_checked", { count: results.length })}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -192,7 +217,7 @@ export const BacklinkChecker = ({ userPlan, remainingChecks, onCheckComplete }: 
                         />
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {result.responseTime}ms • Son kontrol: {result.lastChecked}
+                        {result.responseTime}ms • {t("last_check")}: {result.lastChecked}
                       </div>
                     </div>
                   </div>
