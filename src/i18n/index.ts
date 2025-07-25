@@ -4,15 +4,15 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
-      // Header
+      // Header & Navigation
       "backlink_checker": "Backlink Checker",
-      "remaining_checks": "Remaining Checks",
+      "remaining_checks": "remaining",
       "upgrade_to_premium": "Upgrade to Premium",
-      
-      // Navigation
       "dashboard": "Dashboard",
       "backlink_control": "Backlink Control", 
       "pricing": "Pricing",
+      "management": "Management",
+      "notifications": "Notifications",
       
       // Dashboard
       "welcome_back": "Welcome Back!",
@@ -68,6 +68,13 @@ const resources = {
       "purchased_backlinks": "Purchased Backlinks",
       "seller": "Seller",
       "expires": "Expires",
+      "cancel": "Cancel",
+      "manage_portfolio": "Manage your backlink portfolio",
+      "days_left": "days left",
+      "expired": "Expired",
+      "track_purchased": "Track your purchased backlinks and their expiry dates",
+      "fill_required": "Please fill in all required fields",
+      "backlink_added": "Backlink added successfully!",
       
       // Notifications
       "notification_settings": "Notification Settings",
@@ -78,6 +85,12 @@ const resources = {
       "email_address": "Email Address",
       "phone_number": "Phone Number",
       "save_settings": "Save Settings",
+      "configure_notifications": "Configure how you want to be notified about backlink issues",
+      "receive_email_alerts": "Receive email alerts for important events",
+      "receive_sms_alerts": "Receive SMS alerts via NetGSM integration",
+      "notification_types": "Notification Types",
+      "contact_information": "Contact Information",
+      "settings_saved": "Settings saved - Integration with NetGSM/Email pending",
       
       // Pricing
       "choose_plan": "Choose Your Plan",
@@ -92,32 +105,54 @@ const resources = {
       "email_sms_alerts": "Email & SMS alerts",
       "detailed_reports": "Detailed reports",
       "priority_support": "Priority support",
+      "upgrade_success": "Plan upgraded successfully!",
+      "choose_best_plan": "Choose the plan that fits your needs best",
+      "get_started": "Get Started",
       
-      // Theme
+      // Theme & Settings
       "theme": "Theme",
       "light": "Light",
       "dark": "Dark",
       "system": "System",
-      
-      // Language
       "language": "Language",
       "english": "English",
       "turkish": "Türkçe",
       "french": "Français",
-      "german": "Deutsch"
+      "german": "Deutsch",
+      
+      // Common UI
+      "loading": "Loading...",
+      "error": "Error",
+      "success": "Success",
+      "warning": "Warning",
+      "info": "Info",
+      "close": "Close",
+      "open": "Open",
+      "save": "Save",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View",
+      "add": "Add",
+      "remove": "Remove",
+      "search": "Search",
+      "filter": "Filter",
+      "sort": "Sort",
+      "refresh": "Refresh",
+      "export": "Export",
+      "import": "Import"
     }
   },
   tr: {
     translation: {
-      // Header
+      // Header & Navigation
       "backlink_checker": "Backlink Kontrol",
-      "remaining_checks": "Kalan Kontrol",
+      "remaining_checks": "kalan",
       "upgrade_to_premium": "Premium'a Geç",
-      
-      // Navigation
       "dashboard": "Dashboard", 
       "backlink_control": "Backlink Kontrol",
       "pricing": "Fiyatlandırma",
+      "management": "Yönetim",
+      "notifications": "Bildirimler",
       
       // Dashboard
       "welcome_back": "Tekrar Hoş Geldiniz!",
@@ -173,6 +208,13 @@ const resources = {
       "purchased_backlinks": "Satın Alınan Backlinkler",
       "seller": "Satıcı",
       "expires": "Bitiş",
+      "cancel": "İptal",
+      "manage_portfolio": "Backlink portföyünüzü yönetin",
+      "days_left": "gün kaldı",
+      "expired": "Süresi Dolmuş",
+      "track_purchased": "Satın aldığınız backlinleri ve sürelerini takip edin",
+      "fill_required": "Lütfen gerekli alanları doldurun",
+      "backlink_added": "Backlink başarıyla eklendi!",
       
       // Notifications
       "notification_settings": "Bildirim Ayarları",
@@ -183,6 +225,12 @@ const resources = {
       "email_address": "E-posta Adresi",
       "phone_number": "Telefon Numarası",
       "save_settings": "Ayarları Kaydet",
+      "configure_notifications": "Backlink sorunları hakkında nasıl bilgilendirilmek istediğinizi yapılandırın",
+      "receive_email_alerts": "Önemli olaylar için e-posta uyarıları alın",
+      "receive_sms_alerts": "NetGSM entegrasyonu ile SMS uyarıları alın",
+      "notification_types": "Bildirim Türleri",
+      "contact_information": "İletişim Bilgileri",
+      "settings_saved": "Ayarlar kaydedildi - NetGSM/E-posta entegrasyonu beklemede",
       
       // Pricing
       "choose_plan": "Planınızı Seçin",
@@ -197,19 +245,41 @@ const resources = {
       "email_sms_alerts": "E-posta ve SMS uyarıları",
       "detailed_reports": "Detaylı raporlar",
       "priority_support": "Öncelikli destek",
+      "upgrade_success": "Plan başarıyla yükseltildi!",
+      "choose_best_plan": "İhtiyaçlarınıza en uygun planı seçin",
+      "get_started": "Başlayın",
       
-      // Theme
+      // Theme & Settings
       "theme": "Tema",
       "light": "Açık",
       "dark": "Koyu",
       "system": "Sistem",
-      
-      // Language
       "language": "Dil",
       "english": "English",
       "turkish": "Türkçe", 
       "french": "Français",
-      "german": "Deutsch"
+      "german": "Deutsch",
+      
+      // Common UI
+      "loading": "Yükleniyor...",
+      "error": "Hata",
+      "success": "Başarılı",
+      "warning": "Uyarı",
+      "info": "Bilgi",
+      "close": "Kapat",
+      "open": "Aç",
+      "save": "Kaydet",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "view": "Görüntüle",
+      "add": "Ekle",
+      "remove": "Kaldır",
+      "search": "Ara",
+      "filter": "Filtrele",
+      "sort": "Sırala",
+      "refresh": "Yenile",
+      "export": "Dışa Aktar",
+      "import": "İçe Aktar"
     }
   },
   fr: {

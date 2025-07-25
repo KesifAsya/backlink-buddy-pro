@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Activity, TrendingUp, AlertTriangle, CheckCircle, Clock, Zap, BarChart3, PieChart } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface DashboardProps {
   userPlan: 'free' | 'premium';
@@ -10,6 +11,7 @@ interface DashboardProps {
 }
 
 export const Dashboard = ({ userPlan, remainingChecks, totalChecks }: DashboardProps) => {
+  const { t } = useTranslation();
   const usedChecks = totalChecks - remainingChecks;
   const usagePercentage = (usedChecks / totalChecks) * 100;
 
@@ -56,13 +58,13 @@ export const Dashboard = ({ userPlan, remainingChecks, totalChecks }: DashboardP
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Kalan Kontrol</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("remaining_checks")}</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{remainingChecks}</div>
             <p className="text-xs text-muted-foreground">
-              {totalChecks} toplam hak
+              {totalChecks} {t("monthly_limit")}
             </p>
             <div className="mt-2">
               <Progress value={usagePercentage} className="w-full" />
@@ -72,54 +74,53 @@ export const Dashboard = ({ userPlan, remainingChecks, totalChecks }: DashboardP
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Bu Hafta</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("this_week")}</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">84</div>
             <p className="text-xs text-muted-foreground">
-              +20.1% geçen haftaya göre
+              +20.1% {t("from_last_week")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Aktif Linkler</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("active_backlinks")}</CardTitle>
             <CheckCircle className="h-4 w-4 text-success" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">156</div>
             <p className="text-xs text-muted-foreground">
-              81.2% başarı oranı
+              81.2% {t("success_rate")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Kırık Linkler</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("broken_backlinks")}</CardTitle>
             <AlertTriangle className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">24</div>
             <p className="text-xs text-muted-foreground">
-              -5.4% geçen haftaya göre
+              -5.4% {t("from_last_week")}
             </p>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        {/* Weekly Activity */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5" />
-              Haftalık Aktivite
+              {t("weekly_activity")}
             </CardTitle>
             <CardDescription>
-              Son 7 günde yapılan kontroller
+              {t("checks_last_7_days")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -130,27 +131,26 @@ export const Dashboard = ({ userPlan, remainingChecks, totalChecks }: DashboardP
                     <span className="text-sm font-medium w-8">{day.day}</span>
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-success"></div>
-                      <span className="text-xs text-muted-foreground">{day.active} aktif</span>
+                      <span className="text-xs text-muted-foreground">{day.active} {t("active")}</span>
                       <div className="w-2 h-2 rounded-full bg-destructive ml-2"></div>
-                      <span className="text-xs text-muted-foreground">{day.broken} kırık</span>
+                      <span className="text-xs text-muted-foreground">{day.broken} {t("broken")}</span>
                     </div>
                   </div>
-                  <Badge variant="outline">{day.checks} toplam</Badge>
+                  <Badge variant="outline">{day.checks} {t("total")}</Badge>
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        {/* Status Distribution */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <PieChart className="h-5 w-5" />
-              Link Durumu Dağılımı
+              {t("status_distribution")}
             </CardTitle>
             <CardDescription>
-              Toplam kontrol edilen linklerin durumu
+              {t("status_of_all_links")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -162,7 +162,7 @@ export const Dashboard = ({ userPlan, remainingChecks, totalChecks }: DashboardP
                       className="w-3 h-3 rounded-full" 
                       style={{ backgroundColor: status.color }}
                     ></div>
-                    <span className="text-sm font-medium">{status.name}</span>
+                    <span className="text-sm font-medium">{t(status.name.toLowerCase())}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-lg font-bold">{status.value}</span>
@@ -175,8 +175,8 @@ export const Dashboard = ({ userPlan, remainingChecks, totalChecks }: DashboardP
               ))}
               <div className="pt-2 border-t">
                 <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>Toplam Kontrol</span>
-                  <span>192 link</span>
+                  <span>{t("total_checked")}</span>
+                  <span>192 {t("links")}</span>
                 </div>
               </div>
             </div>
@@ -185,12 +185,11 @@ export const Dashboard = ({ userPlan, remainingChecks, totalChecks }: DashboardP
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        {/* Recent Activity */}
         <Card>
           <CardHeader>
-            <CardTitle>Son Kontroller</CardTitle>
+            <CardTitle>{t("recent_activity")}</CardTitle>
             <CardDescription>
-              En son yapılan backlink kontrolleri
+              {t("recent_backlink_checks")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -213,8 +212,7 @@ export const Dashboard = ({ userPlan, remainingChecks, totalChecks }: DashboardP
                     check.status === 'active' ? 'bg-success text-success-foreground' :
                     check.status === 'redirect' ? 'bg-warning text-warning-foreground' : ''
                   }>
-                    {check.status === 'active' ? 'Aktif' :
-                     check.status === 'broken' ? 'Kırık' : 'Yönlendirme'}
+                    {t(check.status)}
                   </Badge>
                 </div>
               ))}
@@ -222,7 +220,6 @@ export const Dashboard = ({ userPlan, remainingChecks, totalChecks }: DashboardP
           </CardContent>
         </Card>
 
-        {/* Plan Info */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -231,34 +228,34 @@ export const Dashboard = ({ userPlan, remainingChecks, totalChecks }: DashboardP
               ) : (
                 <Activity className="h-5 w-5" />
               )}
-              {userPlan === 'premium' ? 'Premium Plan' : 'Ücretsiz Plan'}
+              {userPlan === 'premium' ? t("premium") + ' ' + t("plan") : t("free") + ' ' + t("plan")}
             </CardTitle>
             <CardDescription>
-              Mevcut plan özellikleriniz
+              {t("current_plan_features")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-sm">Kontrol Limiti</span>
-                <span className="text-sm font-medium">{totalChecks} / ay</span>
+                <span className="text-sm">{t("check_limit")}</span>
+                <span className="text-sm font-medium">{totalChecks} / {t("month")}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm">Kontrol Sıklığı</span>
+                <span className="text-sm">{t("check_frequency")}</span>
                 <span className="text-sm font-medium">
-                  {userPlan === 'premium' ? 'Saatlik' : 'Günlük'}
+                  {userPlan === 'premium' ? t("hourly") : t("daily")}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm">Otomatik Kontrol</span>
+                <span className="text-sm">{t("automatic_checking")}</span>
                 <span className="text-sm font-medium">
-                  {userPlan === 'premium' ? 'Aktif' : 'Pasif'}
+                  {userPlan === 'premium' ? t("active") : t("inactive")}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm">E-posta Bildirimleri</span>
+                <span className="text-sm">{t("email_notifications")}</span>
                 <span className="text-sm font-medium">
-                  {userPlan === 'premium' ? 'Aktif' : 'Pasif'}
+                  {userPlan === 'premium' ? t("active") : t("inactive")}
                 </span>
               </div>
             </div>
@@ -266,7 +263,7 @@ export const Dashboard = ({ userPlan, remainingChecks, totalChecks }: DashboardP
             {userPlan === 'free' && (
               <div className="pt-2 border-t">
                 <p className="text-sm text-muted-foreground">
-                  Premium plana geçerek daha fazla özellik kullanabilirsiniz.
+                  {t("upgrade_for_more_features")}
                 </p>
               </div>
             )}
